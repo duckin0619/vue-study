@@ -6,8 +6,8 @@
 </template>
 
 <script>
-    import Input from '../component/TodoInput';
-    import Button from '../component/TodoButton';
+    import Input from '../component/InputItem';
+    import Button from '../component/ButtonItem';
 
     export default {
         name: "TodoInput",
