@@ -1,0 +1,29 @@
+{
+  "name": "vue-nuxt",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "start": "node main.js",
+    "dev": "nuxt --spa",
+    "generate": "nuxt generate --spa"
+  },
+  "author": {
+    "name": "duck",
+    "email": "duckin0619@gmail.com"
+  },
+  "dependencies": {
+    "vue": "^2.6.10",
+    "nuxt": "^2.5.1",
+    "element-ui": "^2.6.3",
+    "nuxt-element-ui": "^1.0.10"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.0.5",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-react": "^7.0.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}

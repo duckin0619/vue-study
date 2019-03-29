@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Todo List</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <input-group></input-group>
+
+    <todo-list :todolist="list"></todo-list>
+</div>
+
+<script>
+    Vue.component('input-group', {
+        template: '<div class="form-group">\n' +
+            '        <input type="text" id="comment" v-model="comment" @keyup.enter="addTodo">\n' +
+            '        <button type="button" @click="addTodo">add todo list</button>\n' +
+            '    </div>',
+        data() {
+            return {
+                comment: ''
+            }
+        },
+        methods: {
+            addTodo() {
+                const comment = this.comment;
+                if (!comment) return;
+
+                eventBus.$emit('addTodo', comment);
+                this.comment = '';
+            }
+        }
+    });
+
+    Vue.component('todo-list', {
+        template: '<div class="todo-list-form">\n' +
+            '        <table style="border: 1px solid;">\n' +
+            '            <thead>\n' +
+            '            <tr>\n' +
+            '                <th style="width: 100px;">번호</th>\n' +
+            '                <th style="width: 140px;">시작일</th>\n' +
+            '                <th style="width: 140px;">종료일</th>\n' +
+            '                <th style="width: 200px;">내용</th>\n' +
+            '            </tr>\n' +
+            '            </thead>\n' +
+            '            <tbody>\n' +
+            '            <tr v-for="(todo, index) in todolist">\n' +
+            '                <td>{{ todo.index }}</td>\n' +
+            '                <td>{{ todo.openDate }}</td>\n' +
+            '                <td>{{ todo.closeDate }}</td>\n' +
+            '                <td>{{ todo.comment }}</td>\n' +
+            '                <td>\n' +
+            '                    <button type="button" @click="closeTodo(index)">끝!</button>\n' +
+            '                    <button type="button" @click="removeTodo(index)">삭제!</button>\n' +
+            '                </td>\n' +
+            '            </tr>\n' +
+            '            </tbody>\n' +
+            '        </table>\n' +
+            '    </div>',
+        methods: {
+            closeTodo(index) {
+                eventBus.$emit('closeTodo', index);
+            },
+            removeTodo(index) {
+                eventBus.$emit('removeTodo', index);
+            }
+        },
+        props: ['todolist']
+    });
+
+    const eventBus = new Vue();
+
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                index: 1,
+                list: []
+            }
+        },
+        created() {
+            eventBus.$on('addTodo', this.addTodo);
+            eventBus.$on('closeTodo', this.closeTodo);
+            eventBus.$on('removeTodo', this.removeTodo);
+        },
+        methods: {
+            addTodo(comment) {
+                this.list.push({
+                    index: this.index++,
+                    openDate: new Date().toLocaleDateString(),
+                    closeDate: '',
+                    comment: comment
+                });
+            },
+            closeTodo(index) {
+                this.list[index].closeDate = new Date().toLocaleDateString();
+            },
+            removeTodo(index) {
+                this.list.splice(index, 1);
+
+                if (this.list.length === 0) this.index = 1;
+            }
+        }
+    })
+</script>
+</body>
+</html>

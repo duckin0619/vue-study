@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Todo List</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <input-group v-on:add-todo-master="addTodo"></input-group>
+
+    <todo-list :todolist="list" v-on:close-todo-master="closeTodo" v-on:remove-todo-master="removeTodo"></todo-list>
+</div>
+
+<script>
+    Vue.component('input-group', {
+        template: '<div class="form-group">\n' +
+            '        <input type="text" id="comment" v-model="comment" @keyup.enter="addTodo">\n' +
+            '        <button type="button" @click="addTodo">add todo list</button>\n' +
+            '    </div>',
+        data() {
+            return {
+                comment: ''
+            }
+        },
+        methods: {
+            addTodo() {
+                const comment = this.comment;
+                if (!comment) return;
+
+                this.$emit('add-todo-master', comment);
+                this.comment = '';
+            }
+        }
+    });
+
+    Vue.component('todo-list', {
+        template: '<div class="todo-list-form">\n' +
+            '        <table style="border: 1px solid;">\n' +
+            '            <thead>\n' +
+            '            <tr>\n' +
+            '                <th style="width: 100px;">번호</th>\n' +
+            '                <th style="width: 140px;">시작일</th>\n' +
+            '                <th style="width: 140px;">종료일</th>\n' +
+            '                <th style="width: 200px;">내용</th>\n' +
+            '            </tr>\n' +
+            '            </thead>\n' +
+            '            <tbody>\n' +
+            '            <tr v-for="(todo, index) in todolist">\n' +
+            '                <td>{{ todo.index }}</td>\n' +
+            '                <td>{{ todo.openDate }}</td>\n' +
+            '                <td>{{ todo.closeDate }}</td>\n' +
+            '                <td>{{ todo.comment }}</td>\n' +
+            '                <td>\n' +
+            '                    <button type="button" @click="closeTodo(index)">끝!</button>\n' +
+            '                    <button type="button" @click="removeTodo(index)">삭제!</button>\n' +
+            '                </td>\n' +
+            '            </tr>\n' +
+            '            </tbody>\n' +
+            '        </table>\n' +
+            '    </div>',
+        methods: {
+            closeTodo(index) {
+                this.$emit('close-todo-master', index);
+            },
+            removeTodo(index) {
+                this.$emit('remove-todo-master', index);
+            }
+        },
+        props: ['todolist']
+    });
+
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                index: 1,
+                list: []
+            }
+        },
+        methods: {
+            addTodo(comment) {
+                this.list.push({
+                    index: this.index++,
+                    openDate: new Date().toLocaleDateString(),
+                    closeDate: '',
+                    comment: comment
+                });
+            },
+            closeTodo(index) {
+                this.list[index].closeDate = new Date().toLocaleDateString();
+            },
+            removeTodo(index) {
+                this.list.splice(index, 1);
+
+                if (this.list.length === 0) this.index = 1;
+            }
+        }
+    })
+</script>
+</body>
+</html>
