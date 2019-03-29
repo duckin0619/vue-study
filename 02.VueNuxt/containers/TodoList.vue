@@ -10,28 +10,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(todo, index) in list">
-                <td>{{todo.index}}</td>
-                <td>{{todo.openDate}}</td>
-                <td>{{todo.closeDate}}</td>
-                <td>{{todo.comment}}</td>
-                <td>
-                    <button type="button" @click="closeTodo(index)">Close</button>
-                    <button type="button" @click="removeTodo(index)">Remove</button>
-                </td>
-            </tr>
+            <tr is="TodoItem" v-for="(todo, index) in list" :key="index" v-bind:todo="todo" v-on:close-todo-item="closeTodo(index)" v-on:remove-todo-item="removeTodo(index)"></tr>
             </tbody>
         </table>
     </div>
 </template>
 
 <script>
+    import TodoItem from '../component/TodoItem';
+
     export default {
         name: "TodoList",
+        components: {TodoItem},
         data() {
             return {
-                index : 1,
-                list : []
+                index: 1,
+                list: []
             }
         },
         methods: {
