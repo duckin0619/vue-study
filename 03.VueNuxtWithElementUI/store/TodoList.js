@@ -4,14 +4,14 @@ export const state = () => ({
 });
 
 export const mutations = {
-    add(state, text) {
+    add(state, comment) {
         const index = state.index++;
 
         state.list.push({
             id: index,
             openDate: new Date().toLocaleDateString(),
             closeDate: '',
-            comment: text
+            comment: comment
         });
     },
     close(state, index) {
